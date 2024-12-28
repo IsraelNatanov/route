@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgis/postgis:15-3.3
+    container_name: postgres
+    environment:
+      POSTGRES_USER: geouser
+      POSTGRES_PASSWORD: geosecret
+      POSTGRES_DB: geodb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./data:/data
+
+  osrm-backend:
+    image: osrm/osrm-backend
+    container_name: osrm-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data/osrm:/data
+    command: osrm-routed /data/israel-and-palestine-latest.osrm
+
+volumes:
+  pgdata:
